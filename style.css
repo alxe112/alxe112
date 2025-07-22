@@ -1,0 +1,120 @@
+body {
+    background-color: #1a1a1a;
+    background-image: url('https://i.imgur.com/3Y2jZWY.png'); /* Neon M logo */
+    background-size: cover;
+    background-attachment: fixed;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #111;
+    border-bottom: 1px solid #333;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    margin-left: 1rem;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #00ffff;
+}
+
+main {
+    display: flex;
+    padding: 1rem;
+}
+
+.stream-container {
+    flex-grow: 1;
+}
+
+.video-player {
+    margin-bottom: 1rem;
+}
+
+.video-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: #222;
+}
+
+.video-actions button {
+    background-color: #00ffff;
+    color: #111;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.video-actions button:hover {
+    background-color: #00b3b3;
+}
+
+.chat {
+    background-color: #111;
+    padding: 1rem;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    border: 1px solid #333;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.video-list {
+    width: 300px;
+    margin-left: 1rem;
+    background-color: #111;
+    padding: 1rem;
+}
+
+.video-item {
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.video-item:hover {
+    background-color: #222;
+}
+
+.tabs {
+    margin-bottom: 1rem;
+}
+
+.tabs button {
+    background-color: #111;
+    color: #fff;
+    border: 1px solid #333;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tabs button:hover {
+    background-color: #222;
+}
