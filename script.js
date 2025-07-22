@@ -1,19 +1,31 @@
 const App = () => {
     const [language, setLanguage] = React.useState('en');
+    const [chatbotVisible, setChatbotVisible] = React.useState(false);
 
     const toggleLanguage = () => {
         setLanguage(language === 'en' ? 'mugen' : 'en');
     };
 
+    const handleChatbotToggle = () => {
+        setChatbotVisible(!chatbotVisible);
+    };
+
     return (
         <div>
-            <Header toggleLanguage={toggleLanguage} language={language} />
+            <Header
+                toggleLanguage={toggleLanguage}
+                language={language}
+                onChatbotToggle={handleChatbotToggle}
+            />
             <Main language={language} />
+            {chatbotVisible && <Chatbot mainRef={mainRef} />}
         </div>
     );
 };
 
-const Header = ({ toggleLanguage, language }) => {
+const mainRef = React.createRef();
+
+const Header = ({ toggleLanguage, language, onChatbotToggle }) => {
     const translations = {
         en: {
             stream: 'Stream',
@@ -41,9 +53,14 @@ const Header = ({ toggleLanguage, language }) => {
                 <a href="#">{translations[language].quests}</a>
                 <a href="#">{translations[language].upgrades}</a>
             </nav>
-            <button onClick={toggleLanguage}>
-                {language === 'en' ? 'MugenLingua' : 'English'}
-            </button>
+            <div className="header-right">
+                <button onClick={toggleLanguage}>
+                    {language === 'en' ? 'MugenLingua' : 'English'}
+                </button>
+                <div className="chatbot-icon" onClick={onChatbotToggle}>
+                    🤖
+                </div>
+            </div>
         </header>
     );
 };
@@ -68,6 +85,11 @@ const Main = () => {
 
     const handleVideoSelect = (video) => {
         setSelectedVideo(video);
+    };
+
+    const findVideos = (query) => {
+        const lowerCaseQuery = query.toLowerCase();
+        return videos.filter(video => video.name.toLowerCase().includes(lowerCaseQuery));
     };
 
     const renderTabContent = () => {
@@ -219,6 +241,78 @@ const Comments = ({ video }) => {
                 />
                 <button type="submit">Comment</button>
             </form>
+        </div>
+    );
+};
+
+const Chatbot = ({ mainRef }) => {
+    const [messages, setMessages] = React.useState([]);
+    const [inputValue, setInputValue] = React.useState('');
+
+    const handleInputChange = (event) => {
+        setInputValue(event.target.value);
+    };
+
+    const handleSendMessage = () => {
+        if (inputValue.trim() !== '') {
+            const newMessages = [...messages, { text: inputValue, sender: 'user' }];
+            setMessages(newMessages);
+            setInputValue('');
+            // Simple bot response logic
+            setTimeout(() => {
+                const botResponse = getBotResponse(inputValue);
+                setMessages([...newMessages, { text: botResponse, sender: 'bot' }]);
+            }, 500);
+        }
+    };
+
+    const getBotResponse = (userInput) => {
+        const lowerCaseInput = userInput.toLowerCase();
+        if (lowerCaseInput.includes('hello') || lowerCaseInput.includes('hi')) {
+            return 'Hello there! How can I help you today?';
+        } else if (lowerCaseInput.includes('how to upload')) {
+            return 'You can upload a video by clicking the "Choose File" button above the tabs.';
+        } else if (lowerCaseInput.startsWith('remind me to')) {
+            const reminder = userInput.substring('remind me to'.length).trim();
+            setTimeout(() => {
+                alert(`Reminder: ${reminder}`);
+            }, 10000); // 10 seconds for demonstration
+            return `I will remind you to "${reminder}" in 10 seconds.`;
+        } else if (lowerCaseInput.startsWith('find videos about')) {
+            const query = lowerCaseInput.substring('find videos about'.length).trim();
+            const results = mainRef.current.findVideos(query);
+            if (results.length > 0) {
+                return `I found ${results.length} video(s) about "${query}".`;
+            } else {
+                return `I couldn't find any videos about "${query}".`;
+            }
+        } else {
+            return "I'm sorry, I don't understand that. Can you please rephrase?";
+        }
+    };
+
+    return (
+        <div className="chatbot">
+            <div className="chatbot-header">
+                <h3>MugenBot</h3>
+            </div>
+            <div className="chatbot-messages">
+                {messages.map((message, index) => (
+                    <div key={index} className={`message ${message.sender}`}>
+                        {message.text}
+                    </div>
+                ))}
+            </div>
+            <div className="chatbot-input">
+                <input
+                    type="text"
+                    placeholder="Ask me anything..."
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                />
+                <button onClick={handleSendMessage}>Send</button>
+            </div>
         </div>
     );
 };
